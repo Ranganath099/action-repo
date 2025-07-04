@@ -1,0 +1,20 @@
+name: Trigger Webhook
+
+on:
+  push:
+  pull_request:
+    types: [opened, closed]
+
+jobs:
+  call-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Trigger webhook
+        run: |
+          curl -X POST https://webhook-repo-nmzl.onrender.com/webhook \
+            -H "X-GitHub-Event: ${{ github.event_name }}" \
+            -H "Content-Type: application/json" \
+            -d '${{ toJson(github.event) }}'
